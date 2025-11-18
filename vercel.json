@@ -1,0 +1,38 @@
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "pbn-fintech-app/web/package.json",
+      "use": "@vercel/static-build",
+      "config": {
+        "distDir": "pbn-fintech-app/web/build"
+      }
+    }
+  ],
+  "routes": [
+    {
+      "src": "/static/(.*)",
+      "dest": "/pbn-fintech-app/web/build/static/$1"
+    },
+    {
+      "src": "/favicon.ico",
+      "dest": "/pbn-fintech-app/web/build/favicon.ico"
+    },
+    {
+      "src": "/logo(.*).png",
+      "dest": "/pbn-fintech-app/web/build/logo$1.png"
+    },
+    {
+      "src": "/manifest.json",
+      "dest": "/pbn-fintech-app/web/build/manifest.json"
+    },
+    {
+      "src": "/robots.txt",
+      "dest": "/pbn-fintech-app/web/build/robots.txt"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/pbn-fintech-app/web/build/index.html"
+    }
+  ]
+}
