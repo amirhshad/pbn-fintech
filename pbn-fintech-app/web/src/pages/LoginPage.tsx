@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../hooks/useAppDispatch';
 import { login, verifyPhone, register } from '../store/authSlice';
+import { motion } from 'framer-motion';
+import { FiPhone, FiUser, FiShield, FiArrowLeft } from 'react-icons/fi';
 
 export const LoginPage: React.FC = () => {
   const [step, setStep] = useState<'phone' | 'verify' | 'register'>('phone');
@@ -75,155 +77,241 @@ export const LoginPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-primary-500 to-primary-700 flex items-center justify-center px-4">
-      <div className="max-w-md w-full bg-white rounded-lg shadow-xl p-8">
-        <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-gray-900">PBN Fintech</h1>
-          <p className="text-gray-600 mt-2">Peer-to-Peer Cash Exchange</p>
+    <div className="min-h-screen bg-gradient-app flex items-center justify-center px-4 py-8">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        className="max-w-md w-full"
+      >
+        <div className="bg-white rounded-2xl shadow-2xl p-8 md:p-10">
+          {/* Header */}
+          <div className="text-center mb-8">
+            <motion.div
+              initial={{ scale: 0.8 }}
+              animate={{ scale: 1 }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+              className="w-20 h-20 bg-gradient-primary rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg"
+            >
+              <FiPhone className="text-white text-4xl" />
+            </motion.div>
+            <h1 className="text-4xl font-bold text-gray-900 mb-2">PBN Fintech</h1>
+            <p className="text-gray-600 text-lg">Peer-to-Peer Cash Exchange</p>
+          </div>
+
+          {/* Phone Step */}
+          {step === 'phone' && (
+            <motion.form
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: 20 }}
+              onSubmit={handlePhoneSubmit}
+            >
+              <div className="mb-6">
+                <label className="block text-gray-700 text-sm font-semibold mb-3">
+                  <div className="flex items-center gap-2">
+                    <FiPhone className="text-primary-600" />
+                    Phone Number
+                  </div>
+                </label>
+                <div className="flex shadow-sm">
+                  <span className="inline-flex items-center px-4 rounded-l-xl border-2 border-r-0 border-gray-300 bg-gray-50 text-gray-600 text-base font-medium">
+                    +31
+                  </span>
+                  <input
+                    type="tel"
+                    value={phoneNumber}
+                    onChange={(e) => setPhoneNumber(e.target.value)}
+                    placeholder="612345678"
+                    className="input rounded-l-none flex-1"
+                    required
+                  />
+                </div>
+                <p className="text-xs text-gray-500 mt-2 bg-blue-50 p-3 rounded-lg border border-blue-100">
+                  Test users: 612345678, 687654321, 655555555, 644444444
+                </p>
+              </div>
+
+              {error && (
+                <motion.div
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="mb-6 p-4 bg-red-50 border-2 border-red-200 text-red-700 rounded-xl flex items-start gap-3"
+                >
+                  <span className="text-red-500 text-xl">⚠️</span>
+                  <span>{error}</span>
+                </motion.div>
+              )}
+
+              <button
+                type="submit"
+                disabled={isLoading}
+                className="btn btn-primary w-full py-3 text-lg shadow-xl"
+              >
+                {isLoading ? (
+                  <span className="flex items-center justify-center gap-2">
+                    <span className="animate-spin">⏳</span> Loading...
+                  </span>
+                ) : (
+                  'Continue'
+                )}
+              </button>
+            </motion.form>
+          )}
+
+          {/* Register Step */}
+          {step === 'register' && (
+            <motion.form
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: 20 }}
+              onSubmit={handleRegisterSubmit}
+            >
+              <div className="mb-6">
+                <label className="block text-gray-700 text-sm font-semibold mb-3">
+                  <div className="flex items-center gap-2">
+                    <FiUser className="text-primary-600" />
+                    Full Name
+                  </div>
+                </label>
+                <input
+                  type="text"
+                  value={fullName}
+                  onChange={(e) => setFullName(e.target.value)}
+                  placeholder="John Doe"
+                  className="input"
+                  required
+                />
+              </div>
+
+              <div className="mb-6">
+                <label className="block text-gray-700 text-sm font-semibold mb-3">
+                  <div className="flex items-center gap-2">
+                    <FiPhone className="text-primary-600" />
+                    Phone Number
+                  </div>
+                </label>
+                <div className="flex shadow-sm">
+                  <span className="inline-flex items-center px-4 rounded-l-xl border-2 border-r-0 border-gray-300 bg-gray-50 text-gray-600 text-base font-medium">
+                    +31
+                  </span>
+                  <input
+                    type="tel"
+                    value={phoneNumber}
+                    onChange={(e) => setPhoneNumber(e.target.value)}
+                    className="input rounded-l-none flex-1"
+                    required
+                  />
+                </div>
+              </div>
+
+              {error && (
+                <motion.div
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="mb-6 p-4 bg-red-50 border-2 border-red-200 text-red-700 rounded-xl flex items-start gap-3"
+                >
+                  <span className="text-red-500 text-xl">⚠️</span>
+                  <span>{error}</span>
+                </motion.div>
+              )}
+
+              <button
+                type="submit"
+                disabled={isLoading}
+                className="btn btn-primary w-full py-3 text-lg shadow-xl mb-3"
+              >
+                {isLoading ? (
+                  <span className="flex items-center justify-center gap-2">
+                    <span className="animate-spin">⏳</span> Registering...
+                  </span>
+                ) : (
+                  'Register'
+                )}
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setStep('phone')}
+                className="w-full flex items-center justify-center gap-2 text-primary-600 hover:text-primary-700 font-semibold py-2 transition-colors"
+              >
+                <FiArrowLeft /> Back
+              </button>
+            </motion.form>
+          )}
+
+          {/* Verify Step */}
+          {step === 'verify' && (
+            <motion.form
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: 20 }}
+              onSubmit={handleVerificationSubmit}
+            >
+              <div className="mb-6">
+                <label className="block text-gray-700 text-sm font-semibold mb-3">
+                  <div className="flex items-center gap-2 justify-center">
+                    <FiShield className="text-primary-600" />
+                    Verification Code
+                  </div>
+                </label>
+                <input
+                  type="text"
+                  value={verificationCode}
+                  onChange={(e) => setVerificationCode(e.target.value)}
+                  placeholder="000000"
+                  maxLength={6}
+                  className="input text-center text-3xl tracking-widest font-bold"
+                  required
+                />
+                <p className="text-xs text-gray-500 mt-3 bg-blue-50 p-3 rounded-lg border border-blue-100 text-center">
+                  Check your phone for the verification code
+                  <br />
+                  <span className="font-semibold">(or use 123456 for test users)</span>
+                </p>
+              </div>
+
+              {error && (
+                <motion.div
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="mb-6 p-4 bg-red-50 border-2 border-red-200 text-red-700 rounded-xl flex items-start gap-3"
+                >
+                  <span className="text-red-500 text-xl">⚠️</span>
+                  <span>{error}</span>
+                </motion.div>
+              )}
+
+              <button
+                type="submit"
+                disabled={isLoading}
+                className="btn btn-success w-full py-3 text-lg shadow-xl mb-3"
+              >
+                {isLoading ? (
+                  <span className="flex items-center justify-center gap-2">
+                    <span className="animate-spin">⏳</span> Verifying...
+                  </span>
+                ) : (
+                  'Verify & Continue'
+                )}
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setStep('phone')}
+                className="w-full flex items-center justify-center gap-2 text-primary-600 hover:text-primary-700 font-semibold py-2 transition-colors"
+              >
+                <FiArrowLeft /> Back
+              </button>
+            </motion.form>
+          )}
         </div>
 
-        {step === 'phone' && (
-          <form onSubmit={handlePhoneSubmit}>
-            <div className="mb-4">
-              <label className="block text-gray-700 text-sm font-bold mb-2">
-                Phone Number
-              </label>
-              <div className="flex">
-                <span className="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 text-sm">
-                  +31
-                </span>
-                <input
-                  type="tel"
-                  value={phoneNumber}
-                  onChange={(e) => setPhoneNumber(e.target.value)}
-                  placeholder="612345678"
-                  className="flex-1 px-4 py-2 border border-gray-300 rounded-r-md focus:outline-none focus:ring-2 focus:ring-primary-500"
-                  required
-                />
-              </div>
-              <p className="text-xs text-gray-500 mt-1">
-                Test users: 612345678, 687654321, 655555555, 644444444
-              </p>
-            </div>
-
-            {error && (
-              <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded">
-                {error}
-              </div>
-            )}
-
-            <button
-              type="submit"
-              disabled={isLoading}
-              className="w-full bg-primary-600 text-white py-2 px-4 rounded-md hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-500 disabled:opacity-50"
-            >
-              {isLoading ? 'Loading...' : 'Continue'}
-            </button>
-          </form>
-        )}
-
-        {step === 'register' && (
-          <form onSubmit={handleRegisterSubmit}>
-            <div className="mb-4">
-              <label className="block text-gray-700 text-sm font-bold mb-2">
-                Full Name
-              </label>
-              <input
-                type="text"
-                value={fullName}
-                onChange={(e) => setFullName(e.target.value)}
-                placeholder="John Doe"
-                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
-                required
-              />
-            </div>
-
-            <div className="mb-4">
-              <label className="block text-gray-700 text-sm font-bold mb-2">
-                Phone Number
-              </label>
-              <div className="flex">
-                <span className="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 text-sm">
-                  +31
-                </span>
-                <input
-                  type="tel"
-                  value={phoneNumber}
-                  onChange={(e) => setPhoneNumber(e.target.value)}
-                  className="flex-1 px-4 py-2 border border-gray-300 rounded-r-md focus:outline-none focus:ring-2 focus:ring-primary-500"
-                  required
-                />
-              </div>
-            </div>
-
-            {error && (
-              <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded">
-                {error}
-              </div>
-            )}
-
-            <button
-              type="submit"
-              disabled={isLoading}
-              className="w-full bg-primary-600 text-white py-2 px-4 rounded-md hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-500 disabled:opacity-50"
-            >
-              {isLoading ? 'Registering...' : 'Register'}
-            </button>
-
-            <button
-              type="button"
-              onClick={() => setStep('phone')}
-              className="w-full mt-2 text-primary-600 hover:text-primary-700"
-            >
-              Back
-            </button>
-          </form>
-        )}
-
-        {step === 'verify' && (
-          <form onSubmit={handleVerificationSubmit}>
-            <div className="mb-4">
-              <label className="block text-gray-700 text-sm font-bold mb-2">
-                Verification Code
-              </label>
-              <input
-                type="text"
-                value={verificationCode}
-                onChange={(e) => setVerificationCode(e.target.value)}
-                placeholder="Enter 6-digit code"
-                maxLength={6}
-                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 text-center text-2xl tracking-widest"
-                required
-              />
-              <p className="text-xs text-gray-500 mt-1">
-                Check your phone for the verification code (or use 123456 for test users)
-              </p>
-            </div>
-
-            {error && (
-              <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded">
-                {error}
-              </div>
-            )}
-
-            <button
-              type="submit"
-              disabled={isLoading}
-              className="w-full bg-primary-600 text-white py-2 px-4 rounded-md hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-500 disabled:opacity-50"
-            >
-              {isLoading ? 'Verifying...' : 'Verify'}
-            </button>
-
-            <button
-              type="button"
-              onClick={() => setStep('phone')}
-              className="w-full mt-2 text-primary-600 hover:text-primary-700"
-            >
-              Back
-            </button>
-          </form>
-        )}
-      </div>
+        {/* Footer */}
+        <p className="text-center text-gray-600 mt-6 text-sm">
+          Secure peer-to-peer cash exchange platform
+        </p>
+      </motion.div>
     </div>
   );
 };
