@@ -3,6 +3,18 @@ import { useNavigate } from 'react-router-dom';
 import { useAppSelector } from '../hooks/useAppDispatch';
 import { usersApi } from '../api/users';
 import { UserStats } from '../types';
+import { motion } from 'framer-motion';
+import {
+  FiDollarSign,
+  FiTrendingUp,
+  FiCheckCircle,
+  FiPercent,
+  FiMap,
+  FiUsers,
+  FiFileText,
+  FiStar,
+} from 'react-icons/fi';
+import { HiCash, HiCurrencyDollar } from 'react-icons/hi';
 
 export const DashboardPage: React.FC = () => {
   const navigate = useNavigate();
@@ -29,131 +41,250 @@ export const DashboardPage: React.FC = () => {
     return null;
   }
 
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1,
+      },
+    },
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { opacity: 1, y: 0 },
+  };
+
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gradient-app">
       <div className="max-w-7xl mx-auto px-4 py-8">
         {/* Header */}
-        <div className="bg-white rounded-lg shadow p-6 mb-6">
-          <div className="flex items-center justify-between">
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="bg-white rounded-2xl shadow-xl p-6 md:p-8 mb-8"
+        >
+          <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
             <div>
-              <h1 className="text-2xl font-bold text-gray-900">Welcome, {user.fullName}!</h1>
-              <p className="text-gray-600 mt-1">
+              <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-2">
+                Welcome back, {user.fullName}!
+              </h1>
+              <p className="text-gray-600 text-lg flex items-center gap-2">
+                <FiDollarSign className="text-primary-600" />
                 {user.phoneNumber}
               </p>
             </div>
-            <div className="text-right">
-              <div className="flex items-center gap-1 justify-end">
-                <span className="text-yellow-500 text-2xl">⭐</span>
-                <span className="text-3xl font-bold text-gray-900">
+            <div className="bg-gradient-primary rounded-2xl p-6 text-white shadow-lg">
+              <div className="flex items-center gap-2 justify-center mb-1">
+                <FiStar className="text-yellow-300 text-2xl" />
+                <span className="text-4xl font-bold">
                   {stats?.trustScore?.toFixed(1) || user.trustScore.toFixed(1)}
                 </span>
               </div>
-              <p className="text-sm text-gray-600">Trust Score</p>
+              <p className="text-sm text-center opacity-90">Trust Score</p>
             </div>
           </div>
-        </div>
+        </motion.div>
 
         {/* Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          <div className="bg-white rounded-lg shadow p-6">
-            <div className="text-3xl font-bold text-primary-600">
-              {stats?.totalTransactions || user.totalTransactions}
+        <motion.div
+          variants={containerVariants}
+          initial="hidden"
+          animate="visible"
+          className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8"
+        >
+          <motion.div variants={itemVariants} className="card bg-white hover:shadow-2xl">
+            <div className="flex items-start justify-between">
+              <div>
+                <div className="text-4xl font-bold text-primary-600 mb-2">
+                  {stats?.totalTransactions || user.totalTransactions}
+                </div>
+                <div className="text-gray-600 font-medium">Total Transactions</div>
+              </div>
+              <div className="w-14 h-14 bg-primary-50 rounded-xl flex items-center justify-center">
+                <FiTrendingUp className="text-primary-600 text-2xl" />
+              </div>
             </div>
-            <div className="text-gray-600 mt-1">Total Transactions</div>
-          </div>
+          </motion.div>
 
-          <div className="bg-white rounded-lg shadow p-6">
-            <div className="text-3xl font-bold text-green-600">
-              {stats?.successfulTransactions || user.successfulTransactions}
+          <motion.div variants={itemVariants} className="card bg-white hover:shadow-2xl">
+            <div className="flex items-start justify-between">
+              <div>
+                <div className="text-4xl font-bold text-success-600 mb-2">
+                  {stats?.successfulTransactions || user.successfulTransactions}
+                </div>
+                <div className="text-gray-600 font-medium">Successful</div>
+              </div>
+              <div className="w-14 h-14 bg-green-50 rounded-xl flex items-center justify-center">
+                <FiCheckCircle className="text-success-600 text-2xl" />
+              </div>
             </div>
-            <div className="text-gray-600 mt-1">Successful</div>
-          </div>
+          </motion.div>
 
-          <div className="bg-white rounded-lg shadow p-6">
-            <div className="text-3xl font-bold text-blue-600">
-              {stats?.completionRate ? `${stats.completionRate.toFixed(0)}%` : '100%'}
+          <motion.div variants={itemVariants} className="card bg-white hover:shadow-2xl">
+            <div className="flex items-start justify-between">
+              <div>
+                <div className="text-4xl font-bold text-primary-600 mb-2">
+                  {stats?.completionRate ? `${stats.completionRate.toFixed(0)}%` : '100%'}
+                </div>
+                <div className="text-gray-600 font-medium">Completion Rate</div>
+              </div>
+              <div className="w-14 h-14 bg-blue-50 rounded-xl flex items-center justify-center">
+                <FiPercent className="text-primary-600 text-2xl" />
+              </div>
             </div>
-            <div className="text-gray-600 mt-1">Completion Rate</div>
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
 
         {/* Main Actions */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-          <button
+        <motion.div
+          variants={containerVariants}
+          initial="hidden"
+          animate="visible"
+          className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8"
+        >
+          <motion.button
+            variants={itemVariants}
             onClick={() => navigate('/cash-requests/create?type=NEED_CASH')}
-            className="bg-gradient-to-r from-red-500 to-red-600 text-white rounded-lg shadow-lg p-8 hover:from-red-600 hover:to-red-700 transition-all transform hover:scale-105"
+            className="bg-gradient-danger text-white rounded-2xl shadow-xl p-8 md:p-10 hover:shadow-2xl transition-all text-left group"
+            whileHover={{ scale: 1.02, y: -4 }}
+            whileTap={{ scale: 0.98 }}
           >
-            <div className="text-6xl mb-4">💵</div>
-            <h3 className="text-2xl font-bold mb-2">I Need Cash</h3>
-            <p className="text-red-100">Find someone nearby who has cash to exchange</p>
-          </button>
+            <div className="w-16 h-16 bg-white/20 rounded-2xl flex items-center justify-center mb-4 group-hover:bg-white/30 transition-all">
+              <HiCurrencyDollar className="text-white text-4xl" />
+            </div>
+            <h3 className="text-3xl font-bold mb-2">I Need Cash</h3>
+            <p className="text-red-100 text-lg">
+              Find someone nearby who has cash to exchange
+            </p>
+          </motion.button>
 
-          <button
+          <motion.button
+            variants={itemVariants}
             onClick={() => navigate('/cash-requests/create?type=HAVE_CASH')}
-            className="bg-gradient-to-r from-green-500 to-green-600 text-white rounded-lg shadow-lg p-8 hover:from-green-600 hover:to-green-700 transition-all transform hover:scale-105"
+            className="bg-gradient-success text-white rounded-2xl shadow-xl p-8 md:p-10 hover:shadow-2xl transition-all text-left group"
+            whileHover={{ scale: 1.02, y: -4 }}
+            whileTap={{ scale: 0.98 }}
           >
-            <div className="text-6xl mb-4">💰</div>
-            <h3 className="text-2xl font-bold mb-2">I Have Cash</h3>
-            <p className="text-green-100">Help someone who needs cash nearby</p>
-          </button>
-        </div>
+            <div className="w-16 h-16 bg-white/20 rounded-2xl flex items-center justify-center mb-4 group-hover:bg-white/30 transition-all">
+              <HiCash className="text-white text-4xl" />
+            </div>
+            <h3 className="text-3xl font-bold mb-2">I Have Cash</h3>
+            <p className="text-green-100 text-lg">
+              Help someone who needs cash nearby
+            </p>
+          </motion.button>
+        </motion.div>
 
         {/* Quick Links */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <button
+        <motion.div
+          variants={containerVariants}
+          initial="hidden"
+          animate="visible"
+          className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8"
+        >
+          <motion.button
+            variants={itemVariants}
             onClick={() => navigate('/cash-requests')}
-            className="bg-white rounded-lg shadow p-4 hover:shadow-md transition-shadow text-left"
+            className="card bg-white text-left group"
+            whileHover={{ scale: 1.02, y: -4 }}
           >
-            <div className="text-2xl mb-2">🗺️</div>
-            <h4 className="font-semibold text-gray-900">Browse Nearby Requests</h4>
-            <p className="text-sm text-gray-600 mt-1">See who needs cash near you</p>
-          </button>
+            <div className="w-12 h-12 bg-primary-50 rounded-xl flex items-center justify-center mb-3 group-hover:bg-primary-100 transition-colors">
+              <FiMap className="text-primary-600 text-2xl" />
+            </div>
+            <h4 className="font-bold text-gray-900 text-lg mb-2">Browse Nearby Requests</h4>
+            <p className="text-sm text-gray-600">See who needs cash near you</p>
+          </motion.button>
 
-          <button
+          <motion.button
+            variants={itemVariants}
             onClick={() => navigate('/matches')}
-            className="bg-white rounded-lg shadow p-4 hover:shadow-md transition-shadow text-left"
+            className="card bg-white text-left group"
+            whileHover={{ scale: 1.02, y: -4 }}
           >
-            <div className="text-2xl mb-2">🤝</div>
-            <h4 className="font-semibold text-gray-900">My Matches</h4>
-            <p className="text-sm text-gray-600 mt-1">View and manage your matches</p>
-          </button>
+            <div className="w-12 h-12 bg-green-50 rounded-xl flex items-center justify-center mb-3 group-hover:bg-green-100 transition-colors">
+              <FiUsers className="text-success-600 text-2xl" />
+            </div>
+            <h4 className="font-bold text-gray-900 text-lg mb-2">My Matches</h4>
+            <p className="text-sm text-gray-600">View and manage your matches</p>
+          </motion.button>
 
-          <button
+          <motion.button
+            variants={itemVariants}
             onClick={() => navigate('/transactions')}
-            className="bg-white rounded-lg shadow p-4 hover:shadow-md transition-shadow text-left"
+            className="card bg-white text-left group"
+            whileHover={{ scale: 1.02, y: -4 }}
           >
-            <div className="text-2xl mb-2">📋</div>
-            <h4 className="font-semibold text-gray-900">Transaction History</h4>
-            <p className="text-sm text-gray-600 mt-1">View past transactions</p>
-          </button>
-        </div>
+            <div className="w-12 h-12 bg-blue-50 rounded-xl flex items-center justify-center mb-3 group-hover:bg-blue-100 transition-colors">
+              <FiFileText className="text-primary-600 text-2xl" />
+            </div>
+            <h4 className="font-bold text-gray-900 text-lg mb-2">Transaction History</h4>
+            <p className="text-sm text-gray-600">View past transactions</p>
+          </motion.button>
+        </motion.div>
 
         {/* How It Works */}
-        <div className="mt-8 bg-blue-50 rounded-lg shadow p-6">
-          <h3 className="text-xl font-bold text-gray-900 mb-4">How It Works</h3>
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-            <div className="text-center">
-              <div className="text-3xl mb-2">1️⃣</div>
-              <h4 className="font-semibold mb-1">Post Request</h4>
-              <p className="text-sm text-gray-600">Create a cash exchange request with amount and location</p>
-            </div>
-            <div className="text-center">
-              <div className="text-3xl mb-2">2️⃣</div>
-              <h4 className="font-semibold mb-1">Get Matched</h4>
-              <p className="text-sm text-gray-600">Find compatible users within 5km radius</p>
-            </div>
-            <div className="text-center">
-              <div className="text-3xl mb-2">3️⃣</div>
-              <h4 className="font-semibold mb-1">Meet Safely</h4>
-              <p className="text-sm text-gray-600">Coordinate at verified public locations</p>
-            </div>
-            <div className="text-center">
-              <div className="text-3xl mb-2">4️⃣</div>
-              <h4 className="font-semibold mb-1">Exchange & Rate</h4>
-              <p className="text-sm text-gray-600">Complete exchange and rate each other</p>
-            </div>
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.4 }}
+          className="bg-white rounded-2xl shadow-xl p-8"
+        >
+          <h3 className="text-2xl font-bold text-gray-900 mb-6 text-center">
+            How It Works
+          </h3>
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+            {[
+              {
+                step: '1',
+                title: 'Post Request',
+                description: 'Create a cash exchange request with amount and location',
+                color: 'primary',
+              },
+              {
+                step: '2',
+                title: 'Get Matched',
+                description: 'Find compatible users within 5km radius',
+                color: 'success',
+              },
+              {
+                step: '3',
+                title: 'Meet Safely',
+                description: 'Coordinate at verified public locations',
+                color: 'warning',
+              },
+              {
+                step: '4',
+                title: 'Exchange & Rate',
+                description: 'Complete exchange and rate each other',
+                color: 'primary',
+              },
+            ].map((item, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.5 + index * 0.1 }}
+                className="text-center"
+              >
+                <div
+                  className={`w-16 h-16 mx-auto mb-4 rounded-2xl flex items-center justify-center shadow-lg ${
+                    item.color === 'primary'
+                      ? 'bg-gradient-primary'
+                      : item.color === 'success'
+                      ? 'bg-gradient-success'
+                      : 'bg-gradient-to-br from-warning-500 to-warning-600'
+                  }`}
+                >
+                  <span className="text-white text-2xl font-bold">{item.step}</span>
+                </div>
+                <h4 className="font-bold text-gray-900 mb-2">{item.title}</h4>
+                <p className="text-sm text-gray-600">{item.description}</p>
+              </motion.div>
+            ))}
           </div>
-        </div>
+        </motion.div>
       </div>
     </div>
   );
