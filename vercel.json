@@ -1,8 +1,9 @@
 {
-  "buildCommand": "cd pbn-fintech-app/web && npm install && npm run build",
-  "outputDirectory": "pbn-fintech-app/web/build",
-  "installCommand": "cd pbn-fintech-app/web && npm install",
+  "buildCommand": "npm run build",
+  "outputDirectory": "build",
+  "installCommand": "npm install",
   "framework": null,
+  "rootDirectory": "pbn-fintech-app/web",
   "rewrites": [
     {
       "source": "/(.*)",
