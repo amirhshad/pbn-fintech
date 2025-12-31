@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { Navigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../hooks/useAppDispatch';
 import { loadUserFromStorage } from '../../store/authSlice';
+import { isDemoMode } from '../../utils/demoData';
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
@@ -17,7 +18,11 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
       try {
         await dispatch(loadUserFromStorage()).unwrap();
       } catch (error) {
-        // User not found in storage
+        // User not found in storage (skip in demo mode)
+        if (isDemoMode()) {
+          // In demo mode, try loading again
+          await dispatch(loadUserFromStorage()).unwrap();
+        }
       } finally {
         setLoading(false);
       }
@@ -32,18 +37,19 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100">
         <div className="text-center">
-          <div className="text-4xl mb-4">⏳</div>
-          <div className="text-gray-600">Loading...</div>
+          <div className="text-6xl mb-4 animate-bounce">💰</div>
+          <div className="text-xl font-semibold text-gray-700">Loading PBN Fintech...</div>
         </div>
       </div>
     );
   }
 
-  if (!isAuthenticated) {
-    return <Navigate to="/login" replace />;
+  // In demo mode, always allow access
+  if (isDemoMode() || isAuthenticated) {
+    return <>{children}</>;
   }
 
-  return <>{children}</>;
+  return <Navigate to="/login" replace />;
 };

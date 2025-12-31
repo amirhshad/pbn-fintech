@@ -14,7 +14,7 @@ export const LoginPage: React.FC = () => {
 
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const { isAuthenticated, isLoading, error: authError } = useAppSelector((state) => state.auth);
+  const { isAuthenticated, isLoading } = useAppSelector((state) => state.auth);
 
   useEffect(() => {
     if (isAuthenticated) {

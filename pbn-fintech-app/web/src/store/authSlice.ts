@@ -1,6 +1,7 @@
-import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
-import { authApi, VerifyPhoneResponse } from '../api/auth';
-import { User, AuthState } from '../types';
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { authApi } from '../api/auth';
+import { AuthState } from '../types';
+import { DEMO_USER, DEMO_TOKEN, isDemoMode } from '../utils/demoData';
 
 const initialState: AuthState = {
   user: null,
@@ -40,6 +41,11 @@ export const register = createAsyncThunk(
 export const loadUserFromStorage = createAsyncThunk(
   'auth/loadFromStorage',
   async () => {
+    // Check if demo mode is enabled
+    if (isDemoMode()) {
+      return { token: DEMO_TOKEN, user: DEMO_USER };
+    }
+
     const token = localStorage.getItem('token');
     const userStr = localStorage.getItem('user');
 
