@@ -1,5 +1,5 @@
 {
-  "buildCommand": "cd pbn-fintech-app/web && npm install --legacy-peer-deps && npm run build",
+  "buildCommand": "cd pbn-fintech-app/web && npm run build",
   "outputDirectory": "pbn-fintech-app/web/build",
   "installCommand": "cd pbn-fintech-app/web && npm install --legacy-peer-deps",
   "framework": null,
