@@ -207,5 +207,14 @@ export const DEMO_TRANSACTIONS = [
 ];
 
 export const isDemoMode = () => {
-  return process.env.REACT_APP_DEMO_MODE === 'true';
+  // Enable demo mode if:
+  // 1. REACT_APP_DEMO_MODE is explicitly set to true
+  // 2. OR we're on a Vercel deployment (no localhost)
+  // 3. OR there's no API URL or it's the demo API URL
+  const isExplicitlyEnabled = process.env.REACT_APP_DEMO_MODE === 'true';
+  const isVercelDeployment = window.location.hostname.includes('vercel.app');
+  const hasNoBackend = !process.env.REACT_APP_API_URL ||
+                       process.env.REACT_APP_API_URL?.includes('demo');
+
+  return isExplicitlyEnabled || isVercelDeployment || hasNoBackend;
 };
