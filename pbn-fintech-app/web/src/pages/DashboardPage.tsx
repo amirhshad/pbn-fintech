@@ -20,7 +20,6 @@ export const DashboardPage: React.FC = () => {
   const navigate = useNavigate();
   const { user } = useAppSelector((state) => state.auth);
   const [stats, setStats] = useState<UserStats | null>(null);
-  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchStats = async () => {
@@ -29,8 +28,6 @@ export const DashboardPage: React.FC = () => {
         setStats(data);
       } catch (error) {
         console.error('Failed to fetch stats:', error);
-      } finally {
-        setLoading(false);
       }
     };
 

@@ -28,24 +28,32 @@ if (isDemoMode()) {
       await new Promise(resolve => setTimeout(resolve, 300));
 
       // Return mock responses based on endpoint
+      const createMockError = (data: any) => {
+        const error = new Error('Demo mode mock response') as any;
+        error.response = { data, status: 200 };
+        error.config = config;
+        error.isDemo = true;
+        return error;
+      };
+
       if (url.includes('/users/stats')) {
-        throw { response: { data: { success: true, data: DEMO_STATS }, status: 200 }, config, isDemo: true };
+        throw createMockError({ success: true, data: DEMO_STATS });
       }
       if (url.includes('/users/profile')) {
-        throw { response: { data: { success: true, data: { user: DEMO_USER } }, status: 200 }, config, isDemo: true };
+        throw createMockError({ success: true, data: { user: DEMO_USER } });
       }
       if (url.includes('/cash-requests')) {
-        throw { response: { data: { success: true, data: DEMO_CASH_REQUESTS }, status: 200 }, config, isDemo: true };
+        throw createMockError({ success: true, data: DEMO_CASH_REQUESTS });
       }
       if (url.includes('/matches')) {
-        throw { response: { data: { success: true, data: DEMO_MATCHES }, status: 200 }, config, isDemo: true };
+        throw createMockError({ success: true, data: DEMO_MATCHES });
       }
       if (url.includes('/transactions')) {
-        throw { response: { data: { success: true, data: DEMO_TRANSACTIONS }, status: 200 }, config, isDemo: true };
+        throw createMockError({ success: true, data: DEMO_TRANSACTIONS });
       }
 
       // Default success response for other endpoints
-      throw { response: { data: { success: true, message: 'Demo mode' }, status: 200 }, config, isDemo: true };
+      throw createMockError({ success: true, message: 'Demo mode' });
     }
   );
 }

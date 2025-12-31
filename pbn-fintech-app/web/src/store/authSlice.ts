@@ -1,6 +1,6 @@
-import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
-import { authApi, VerifyPhoneResponse } from '../api/auth';
-import { User, AuthState } from '../types';
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { authApi } from '../api/auth';
+import { AuthState } from '../types';
 import { DEMO_USER, DEMO_TOKEN, isDemoMode } from '../utils/demoData';
 
 const initialState: AuthState = {
